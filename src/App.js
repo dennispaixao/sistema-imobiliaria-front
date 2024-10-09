@@ -10,6 +10,9 @@ import EditUser from "./features/users/EditUser";
 import NewUserForm from "./features/users/NewUserForm";
 import EditProduct from "./features/products/EditProduct";
 import NewProduct from "./features/products/NewProduct";
+import NewCategorieForm from "./features/categories/NewCategorieForm";
+import EditCategorie from "./features/categories/EditCategorie";
+import CategoriesList from "./features/categories/CategoriesList";
 import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
@@ -35,15 +38,16 @@ function App() {
               <Route path="dash" element={<DashLayout />}>
                 <Route index element={<Welcome />} />
 
-                <Route
-                  element={
-                    <RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />
-                  }
-                >
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                   <Route path="users">
                     <Route index element={<UsersList />} />
                     <Route path=":id" element={<EditUser />} />
                     <Route path="new" element={<NewUserForm />} />
+                  </Route>
+                  <Route path="categories">
+                    <Route index element={<CategoriesList />} />
+                    <Route path=":id" element={<EditCategorie />} />
+                    <Route path="new" element={<NewCategorieForm />} />
                   </Route>
                 </Route>
 

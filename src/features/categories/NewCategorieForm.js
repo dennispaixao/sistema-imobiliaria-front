@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAddNewProductMutation } from "./categoriesApiSlice";
+import { useAddNewCategorieMutation } from "./categoriesApiSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../hooks/useAuth";
 import { useGetUsersQuery } from "../users/usersApiSlice";
 
-const NewProductForm = ({ users }) => {
-  const { username, isManager, isAdmin } = useAuth();
-  const [addNewProduct, { isLoading, isSuccess, isError, error }] =
-    useAddNewProductMutation();
+const NewCategorieForm = ({ users }) => {
+  const { username, isAdmin } = useAuth();
+  const [addNewCategorie, { isLoading, isSuccess, isError, error }] =
+    useAddNewCategorieMutation();
 
   const navigate = useNavigate();
 
@@ -19,24 +19,19 @@ const NewProductForm = ({ users }) => {
     refetchOnMountOrArgChange: true,
   });
 
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
-  const [status, setStatus] = useState(1);
-  const [downPayment, setDownPayment] = useState("");
-  const [price, setPrice] = useState("");
 
   useEffect(() => {
     if (isSuccess) {
-      setTitle("");
-      setText("");
-      setUserId("");
-      setStatus(1);
-      setDownPayment(null);
-      setPrice(0);
-      navigate("/dash/products");
+      setName("");
+      navigate("/dash/categories");
     }
   }, [isSuccess, navigate]);
+
+  const onNameChanged = (e) => {
+    setName(e.target.value);
+  };
 
   useEffect(() => {
     const { ids: idsUsers, entities: entitiesUsers } = userToFilter;
@@ -45,74 +40,20 @@ const NewProductForm = ({ users }) => {
     );
     setUserId(userIdentifier);
   }, [userToFilter, username]);
-  const formatNumbers = (value) => {
-    let digits = value.replace(/\D/g, "");
-    let result = digits;
-    if (digits.length > 2) {
-      result = digits.slice(0, -2) + "," + digits.slice(-2);
-    }
-    if (digits.length > 5) {
-      result =
-        digits.slice(0, -5) +
-        "." +
-        digits.slice(-5, -2) +
-        "," +
-        digits.slice(-2);
-    }
-    if (digits.length > 8) {
-      result =
-        digits.slice(0, -8) +
-        "." +
-        digits.slice(-8, -5) +
-        "." +
-        digits.slice(-5, -2) +
-        "," +
-        digits.slice(-2);
-    }
-    return result;
-  };
-  const onTitleChanged = (e) => setTitle(e.target.value);
-  const onTextChanged = (e) => setText(e.target.value);
-  const onStatusChanged = (e) => setStatus(e.target.value);
-  const onDownPaymentChanged = (e) => {
-    setDownPayment(formatNumbers(e.target.value));
-  };
-  const onPriceChanged = (e) => {
-    setPrice(formatNumbers(e.target.value));
-  };
 
-  const canSave = [title, text, userId, status].every(Boolean) && !isLoading;
-
-  const parseToNum = (text) => {
-    text = text.replace(".", "");
-    text = text.replace(",", ".");
-    return parseFloat(text);
-  };
-  const onSaveProductClicked = async (e) => {
+  const canSave = [name].every(Boolean) && !isLoading;
+  const onSaveCategorieClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      console.log({
+      await addNewCategorie({
+        name,
         user: userId,
-        title,
-        text,
-        status,
-        downpayment: parseToNum(downPayment),
-      });
-      await addNewProduct({
-        user: userId,
-        title,
-        text,
-        status,
-        price: parseToNum(price),
-        downpayment: parseToNum(downPayment),
       });
     }
   };
 
   const errClass = isError ? "errmsg" : "offscreen";
-  const validTitleClass = !title ? "form__input--incomplete" : "";
-  const validTextClass = !text ? "form__input--incomplete" : "";
-  const validStatusClass = !status ? "form__input--incomplete" : "";
+  const validNameClass = !name ? "form__input--incomplete" : "";
 
   const content = !isAdmin ? (
     <h3 className={errClass}>{error?.data?.message}</h3>
@@ -120,80 +61,28 @@ const NewProductForm = ({ users }) => {
     <>
       <p className={errClass}>{error?.data?.message}</p>
 
-      <form className="form" onSubmit={onSaveProductClicked}>
+      <form className="form" onSubmit={onSaveCategorieClicked}>
         <div className="form__title-row">
-          <h2>New Product</h2>
+          <h2>New Categorie</h2>
           <div className="form__action-buttons">
             <button className="icon-button" title="Save" disabled={!canSave}>
               <FontAwesomeIcon icon={faSave} />
             </button>
           </div>
         </div>
-        <label className="form__label" htmlFor="title">
-          Title:
+        <label className="form__label" htmlFor="name">
+          Name:
         </label>
         <input
-          className={`form__input ${validTitleClass}`}
-          id="title"
-          name="title"
+          className={`form__input`}
+          id="name"
+          name="name"
           type="text"
           autoComplete="off"
-          value={title}
-          onChange={onTitleChanged}
+          value={name}
+          onChange={onNameChanged}
         />
-
-        <label htmlFor="status">Status:</label>
-        <select
-          id="status"
-          name="status"
-          className={`form__input form__input--status ${validStatusClass}`}
-          value={status}
-          onChange={onStatusChanged}
-        >
-          <option value="1">À venda</option>
-          <option value="2">Vendido</option>
-        </select>
-
-        <label className="form__label" htmlFor="text">
-          Text:
-        </label>
-        <textarea
-          className={`form__input form__input--text ${validTextClass}`}
-          id="text"
-          name="text"
-          value={text}
-          onChange={onTextChanged}
-        />
-        <label className="form__label" htmlFor="downpayment">
-          Entrada:
-        </label>
-        <input
-          className={`form__input `}
-          id="downpayment"
-          name="downpayment"
-          type="text"
-          autoComplete="off"
-          value={downPayment}
-          onChange={onDownPaymentChanged}
-        />
-        <label className="form__label" htmlFor="price">
-          Valor:
-        </label>
-        <input
-          className={`form__input `}
-          id="price"
-          name="price"
-          type="text"
-          autoComplete="off"
-          value={price}
-          onChange={onPriceChanged}
-        />
-        <label
-          className="form__label form__checkbox-container"
-          htmlFor="username"
-        >
-          ASSIGNED TO:
-        </label>
+        ASSIGNED TO:
         <p>{username} </p>
         <input type="hidden" name="user" value={userId} />
       </form>
@@ -203,4 +92,4 @@ const NewProductForm = ({ users }) => {
   return content;
 };
 
-export default NewProductForm;
+export default NewCategorieForm;

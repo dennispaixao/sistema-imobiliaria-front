@@ -5,7 +5,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+html, header, footer, input, text-area{
+  max-width:100%;
+}
 /* || VARIABLES */
 
 :root {
@@ -58,7 +60,9 @@
 .icon-button:focus-visible {
   transform: scale(1.2);
 }
-
+form{
+  max-width:100%;
+}
 .icon-button[disabled] {
   visibility: hidden;
 }
@@ -68,6 +72,7 @@
 body {
   font-family: 'Nunito', sans-serif;
   min-height: 100vh;
+  max-width: 100%;
   background-color: var(--BGCOLOR);
   color: var(--COLOR);
   background-image: url('./img/background.jpg');
@@ -87,7 +92,7 @@ select {
   /* React root div */
   min-height: 100vh;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
 }
 
 a {
@@ -105,7 +110,7 @@ a:focus-visible {
 
 /* || PAGES */
 
-.public,
+.publica,
 .welcome {
   display: flex;
   flex-direction: column;
@@ -199,12 +204,17 @@ tr {
 .table {
   font-size: 1rem;
   width: 100%;
+  height: auto;
+  overflow:scroll;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr ;
   color: var(--TABLE-COLOR);
   gap: 0.1em;
 }
 .table--products{
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.table--categories{
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 .table__button {
@@ -267,6 +277,7 @@ tr {
 
 .form__checkbox-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   width: fit-content;
   gap: 0.5em;
@@ -290,13 +301,14 @@ tr {
   padding: 0.5em;
   border-radius: 15px;
 }
+.form__input--status {
+  height:auto;
+}
 
 .form__input--text {
   min-height: 150px;
 }
-.form__input--status {
-  min-height: 150px;
-}
+
 
 .form__input--incomplete {
   border: 1px solid var(--INPUT-INVALID);
@@ -333,14 +345,81 @@ tr {
   flex-flow: column nowrap;
   gap: 0.5em;
 }
+input{
+  max-width:100%;
+}
+
+fieldset{
+  max-width:100%;
+  border:2px solid var(--COLOR);
+  display:flex;
+  flex-direction: column;
+  gap:1rem;
+  flex-wrap: wrap;
+  font-size:2rem;
+}
+label.custom-checkbox{
+  display:flex;
+  vertical-align: center;
+  align-items: center;
+  gap:0.3rem;}
+  
+.custom-checkbox input {
+    display: none;
+  }
+
+  .custom-checkbox input {
+    display: none;
+  }
+  
+  /* Estiliza o span que será o ícone do checkbox */
+  .custom-checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    background-color: #eee;
+    display: inline-block;
+    border-radius: 4px;
+    position: relative;
+  }
+  
+  /* Estilo quando o checkbox está marcado */
+  .custom-checkbox input:checked + .checkmark {
+    background-color: #2196F3;
+    vertical-align: center;
+    align-items: center;
+  }
+  
+  /* Adiciona o ícone de check */
+  .custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  .custom-checkbox input:checked + .checkmark::after {
+    display: block;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
 
 @media screen and (max-width: 400px) {
   h1 {
     font-size: 2rem;
   }
-
+.dash-header{
+  max-width:100%;}
   .dash-header__nav {
     gap: 0;
+  }
+  .dash-header__title{
+    font-size:1rem;
+
+
   }
 
   .icon-button {

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import EditProductForm from "./EditProductForm";
 import { useGetProductsQuery } from "./productsApiSlice";
-import { useGetUsersQuery } from "../users/usersApiSlice";
+import { useGetCategoriesQuery } from "../categories/categoriesApiSlice";
 import useAuth from "../../hooks/useAuth";
 import PulseLoader from "react-spinners/PulseLoader";
 import useTitle from "../../hooks/useTitle";
@@ -19,13 +19,13 @@ const EditProduct = () => {
     }),
   });
 
-  const { users } = useGetUsersQuery("usersList", {
+  const { categories } = useGetCategoriesQuery("categoriesList", {
     selectFromResult: ({ data }) => ({
-      users: data?.ids.map((id) => data?.entities[id]),
+      categories: data?.ids.map((id) => data?.entities[id]),
     }),
   });
 
-  if (!product || !users?.length) return <PulseLoader color={"#FFF"} />;
+  if (!product || !categories?.length) return <PulseLoader color={"#FFF"} />;
 
   if (!isManager && !isAdmin) {
     if (product.username !== username) {
@@ -33,7 +33,13 @@ const EditProduct = () => {
     }
   }
 
-  const content = <EditProductForm product={product} users={users} />;
+  const content = (
+    <EditProductForm
+      product={product}
+      categories={categories}
+      username={username}
+    />
+  );
 
   return content;
 };

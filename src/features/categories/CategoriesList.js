@@ -1,12 +1,12 @@
-import { useGetProductsQuery } from "./categoriesApiSlice";
-import Product from "./Categorie";
+import { useGetCategoriesQuery } from "./categoriesApiSlice";
+import Categorie from "./Categorie";
 import useAuth from "../../hooks/useAuth";
 import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useGetUsersQuery } from "../users/usersApiSlice";
-
-const ProductsList = () => {
-  useTitle("imobiliaria: Products List");
+import { Link } from "react-router-dom";
+const CategoriesList = () => {
+  useTitle("imobiliaria: Categories List");
   const { data: userToFilter } = useGetUsersQuery("usersList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
@@ -16,12 +16,12 @@ const ProductsList = () => {
   const { username, isManager, isAdmin } = useAuth();
 
   const {
-    data: products,
+    data: categories,
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useGetProductsQuery("productsList", {
+  } = useGetCategoriesQuery("categoriesList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -36,7 +36,7 @@ const ProductsList = () => {
   }
 
   if (isSuccess) {
-    const { ids, entities } = products;
+    const { ids, entities } = categories;
 
     let filteredIds;
     if (isManager || isAdmin) {
@@ -49,33 +49,39 @@ const ProductsList = () => {
 
     const tableContent =
       ids?.length &&
-      filteredIds?.map((productId) => (
-        <Product key={productId} productId={productId} />
+      filteredIds?.map((categorieId) => (
+        <Categorie key={categorieId} categorieId={categorieId} />
       ));
 
     content = (
-      <table className="table table--products">
-        <thead className="table__thead">
-          <tr>
-            <th scope="col" className="table__th product__title">
-              Título
-            </th>
-            <th scope="col" className="table__th product__created">
-              Created
-            </th>
-            <th scope="col" className="table__th product__updated">
-              Updated
-            </th>
-            <th scope="col" className="table__th product__edit">
-              Edit
-            </th>
-          </tr>
-        </thead>
-        <tbody>{tableContent}</tbody>
-      </table>
+      <>
+        <p>
+          <Link to="/dash/categories/new">Adicionar nova categoria</Link>
+        </p>
+
+        <table className="table table--categories">
+          <thead className="table__thead">
+            <tr>
+              <th scope="col" className="table__th categorie__title">
+                Nome
+              </th>
+              <th scope="col" className="table__th categorie__created">
+                Criada
+              </th>
+              <th scope="col" className="table__th categorie__updated">
+                Alterada
+              </th>
+              <th scope="col" className="table__th categorie__edit">
+                Editar
+              </th>
+            </tr>
+          </thead>
+          <tbody>{tableContent}</tbody>
+        </table>
+      </>
     );
   }
 
   return content;
 };
-export default ProductsList;
+export default CategoriesList;

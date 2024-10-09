@@ -1,21 +1,21 @@
 import { useParams } from "react-router-dom";
-import EditProductForm from "./EditProductForm";
-import { useGetProductsQuery } from "./productsApiSlice";
+import EditCategorieForm from "./EditCategorieForm";
+import { useGetCategoriesQuery } from "./categoriesApiSlice";
 import { useGetUsersQuery } from "../users/usersApiSlice";
 import useAuth from "../../hooks/useAuth";
 import PulseLoader from "react-spinners/PulseLoader";
 import useTitle from "../../hooks/useTitle";
 
-const EditProduct = () => {
-  useTitle("techProducts: Edit Product");
+const EditCategorie = () => {
+  useTitle("techCategories: Edit Categorie");
 
   const { id } = useParams();
 
   const { username, isManager, isAdmin } = useAuth();
 
-  const { product } = useGetProductsQuery("productsList", {
+  const { categorie } = useGetCategoriesQuery("categoriesList", {
     selectFromResult: ({ data }) => ({
-      product: data?.entities[id],
+      categorie: data?.entities[id],
     }),
   });
 
@@ -25,16 +25,16 @@ const EditProduct = () => {
     }),
   });
 
-  if (!product || !users?.length) return <PulseLoader color={"#FFF"} />;
+  if (!categorie || !users?.length) return <PulseLoader color={"#FFF"} />;
 
   if (!isManager && !isAdmin) {
-    if (product.username !== username) {
+    if (categorie.username !== username) {
       return <p className="errmsg">No access</p>;
     }
   }
 
-  const content = <EditProductForm product={product} users={users} />;
+  const content = <EditCategorieForm categorie={categorie} users={users} />;
 
   return content;
 };
-export default EditProduct;
+export default EditCategorie;

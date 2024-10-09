@@ -14,12 +14,12 @@ const Product = ({ productId }) => {
   const navigate = useNavigate();
 
   if (product) {
-    const created = new Date(product.createdAt).toLocaleString("en-US", {
+    const created = new Date(product.createdAt).toLocaleString("pt-BR", {
       day: "numeric",
       month: "long",
     });
 
-    const updated = new Date(product.updatedAt).toLocaleString("en-US", {
+    const updated = new Date(product.updatedAt).toLocaleString("pt-BR", {
       day: "numeric",
       month: "long",
     });

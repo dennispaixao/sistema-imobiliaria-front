@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useGetUsersQuery } from "../users/usersApiSlice";
+import { Link } from "react-router-dom";
 
 const ProductsList = () => {
   useTitle("imobiliaria: Products List");
@@ -54,25 +55,30 @@ const ProductsList = () => {
       ));
 
     content = (
-      <table className="table table--products">
-        <thead className="table__thead">
-          <tr>
-            <th scope="col" className="table__th product__title">
-              Título
-            </th>
-            <th scope="col" className="table__th product__created">
-              Created
-            </th>
-            <th scope="col" className="table__th product__updated">
-              Updated
-            </th>
-            <th scope="col" className="table__th product__edit">
-              Edit
-            </th>
-          </tr>
-        </thead>
-        <tbody>{tableContent}</tbody>
-      </table>
+      <>
+        <p>
+          <Link to="/dash/products/new">Adicionar novo produto</Link>
+        </p>
+        <table className="table table--products">
+          <thead className="table__thead">
+            <tr>
+              <th scope="col" className="table__th product__title">
+                Título
+              </th>
+              <th scope="col" className="table__th product__created">
+                Criado
+              </th>
+              <th scope="col" className="table__th product__updated">
+                Atualizado
+              </th>
+              <th scope="col" className="table__th product__edit">
+                Editar
+              </th>
+            </tr>
+          </thead>
+          <tbody>{tableContent}</tbody>
+        </table>
+      </>
     );
   }
 
