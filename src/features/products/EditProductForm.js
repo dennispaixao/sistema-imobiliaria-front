@@ -26,7 +26,6 @@ const EditProductForm = ({ product, categories, username }) => {
   const [text, setText] = useState(product.text);
   const [status, setStatus] = useState(product.status);
   const [downpayment, setDownpayment] = useState(product.downpayment);
-  console.log(product.categories);
   const [price, setPrice] = useState(product.price);
   const [selectedCategories, setSelectedCategories] = useState(
     Array.isArray(product.categories) ? [...product.categories] : []

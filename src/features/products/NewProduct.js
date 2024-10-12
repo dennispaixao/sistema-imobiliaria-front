@@ -17,7 +17,7 @@ const NewProduct = () => {
       categories: data?.ids.map((id) => data?.entities[id]),
     }),
   });
-  console.log(categories);
+
   if (!users?.length || !categories?.length)
     return <PulseLoader color={"#FFF"} />;
 

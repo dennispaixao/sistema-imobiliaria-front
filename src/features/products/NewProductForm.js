@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddNewProductMutation } from "./productsApiSlice";
+import { useAddNewImageMutation } from "../images/imagesApiSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../hooks/useAuth";
@@ -13,16 +14,26 @@ const NewProductForm = ({ users, categories }) => {
   const { username, isAdmin } = useAuth();
   const [addNewProduct, { isLoading, isSuccess, isError, error }] =
     useAddNewProductMutation();
+  const [
+    addNewImages,
+    {
+      isLoading: isLoadingImage,
+      isSuccess: isSucessImage,
+      isError: isErrorImage,
+      error: errorImage,
+    },
+  ] = useAddNewImageMutation();
 
   const navigate = useNavigate();
-
   const { data: userToFilter } = useGetUsersQuery("usersList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
 
+  // Estado para armazenar os arquivos e as pré-visualizações
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImagePreviews, setSelectedImagePreviews] = useState([]);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [userId, setUserId] = useState("");
@@ -32,16 +43,18 @@ const NewProductForm = ({ users, categories }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && isSucessImage) {
       setTitle("");
       setText("");
       setUserId("");
       setStatus(1);
       setDownpayment(null);
       setPrice(0);
+      setSelectedImages([]);
+      setSelectedImagePreviews([]);
       navigate("/dash/products");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, isSucessImage, navigate]);
 
   useEffect(() => {
     const { ids: idsUsers, entities: entitiesUsers } = userToFilter;
@@ -73,7 +86,12 @@ const NewProductForm = ({ users, categories }) => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e); // Certifique-se de que aqui você está recebendo arquivos
+
+    // Atualiza o estado de imagens com os novos arquivos
+    setSelectedImages((prevImages) => [...prevImages, ...files]);
+
+    // Gera as pré-visualizações e atualiza o estado
     const imagePreviews = files.map((file) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -85,30 +103,73 @@ const NewProductForm = ({ users, categories }) => {
     });
 
     Promise.all(imagePreviews).then((images) => {
-      setSelectedImages((prevImages) => [...prevImages, ...images]);
+      setSelectedImagePreviews((prevPreviews) => [...prevPreviews, ...images]);
     });
   };
 
+  // Função para deletar imagem da lista
   const handleDeleteImage = (indexToDelete) => {
     setSelectedImages((prevImages) =>
       prevImages.filter((_, index) => index !== indexToDelete)
     );
+    setSelectedImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, index) => index !== indexToDelete)
+    );
   };
 
+  const handleImageUpload = async () => {
+    const formData = new FormData();
+
+    // Adiciona cada imagem ao FormData com o campo "images"
+    selectedImages.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    try {
+      const response = await addNewImages(formData).unwrap();
+      // Supondo que a resposta contém um array de URLs em response.urls
+      return response.urls || []; // Retorna as URLs ou um array vazio
+    } catch (err) {
+      console.error("Erro ao enviar as imagens:", err);
+      return []; // Retorna um array vazio em caso de erro
+    }
+  };
   const canSave = [title, text, userId, status].every(Boolean) && !isLoading;
 
   const onSaveProductClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewProduct({
-        user: userId,
-        title,
-        text,
-        status,
-        price,
-        downpayment,
-        categories: selectedCategories,
-      });
+      try {
+        const imageUploadResult = await handleImageUpload(); // Aguarda a resolução da promessa
+
+        console.log("Resultado do upload de imagem:", imageUploadResult);
+
+        // Verifica se imageUploadResult é um array de strings
+        if (
+          !Array.isArray(imageUploadResult) ||
+          !imageUploadResult.every((url) => typeof url === "string")
+        ) {
+          throw new Error(
+            "O resultado do upload da imagem é inválido ou não é um array de strings."
+          );
+        }
+
+        await addNewProduct({
+          user: userId,
+          title,
+          text,
+          status,
+          price,
+          downpayment,
+          categories: selectedCategories,
+          images: imageUploadResult, // Usa as URLs retornadas aqui
+        }).unwrap();
+
+        console.log("Produto adicionado com sucesso!");
+        navigate("/dash/products");
+      } catch (err) {
+        console.error("Erro ao adicionar produto ou imagens:", err);
+      }
     }
   };
 
@@ -123,9 +184,9 @@ const NewProductForm = ({ users, categories }) => {
     <>
       <p className={errClass}>{error?.data?.message}</p>
 
-      {selectedImages.length > 0 && (
+      {selectedImagePreviews.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
-          {selectedImages.map((image, index) => (
+          {selectedImagePreviews.map((image, index) => (
             <div
               key={index}
               style={{
@@ -161,7 +222,7 @@ const NewProductForm = ({ users, categories }) => {
       <form className="form" onSubmit={onSaveProductClicked}>
         <input
           type="file"
-          onChange={handleImageChange}
+          onChange={(e) => handleImageChange(e.target.files)}
           accept="image/*"
           multiple
         />
@@ -179,6 +240,7 @@ const NewProductForm = ({ users, categories }) => {
           Título:
         </label>
         <input
+          multiple
           className={`form__input ${validTitleClass}`}
           id="title"
           name="title"
