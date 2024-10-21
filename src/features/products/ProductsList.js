@@ -64,18 +64,21 @@ const ProductsList = () => {
     content = (
       <>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <p>
+          <button className="button">
             <Link to="/dash/products/new">Adicionar novo produto</Link>
-          </p>
+          </button>
 
           <table className="table table--products">
             <thead className="table__thead">
               <tr>
+                <th scope="col" className="table__th product__cod">
+                  Cod
+                </th>
                 <th scope="col" className="table__th product__title">
                   Título
                 </th>
                 <th scope="col" className="table__th product__created">
-                  Criado
+                  {"Categoria(s)"}
                 </th>
                 <th scope="col" className="table__th product__updated">
                   Atualizado

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import EditProductForm from "./EditProductForm";
-import { useGetProductsQuery } from "./productsApiSlice";
+import { useGetProductsQuery, useGetProductById } from "./productsApiSlice";
 import { useGetCategoriesQuery } from "../categories/categoriesApiSlice";
 import useAuth from "../../hooks/useAuth";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -37,6 +37,7 @@ const EditProduct = () => {
   const clickBackButton = () => {
     navigate("/dash/products");
   };
+
   const content = (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <button className="button" onClick={clickBackButton}>

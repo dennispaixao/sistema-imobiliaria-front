@@ -43,9 +43,10 @@ const EditProductForm = ({ product, categories, username }) => {
   const [downpayment, setDownpayment] = useState(product.downpayment);
   const [price, setPrice] = useState(product.price);
   const [selectedCategories, setSelectedCategories] = useState(
-    Array.isArray(product.categories) ? [...product.categories] : []
+    Array.isArray(product.categories)
+      ? [...product.categories].map((cat) => cat._id)
+      : []
   );
-
   useEffect(() => {
     if (isSuccess || isDelSuccess) {
       navigate("/dash/products");
@@ -57,7 +58,9 @@ const EditProductForm = ({ product, categories, username }) => {
   const onPriceChanged = (e) => setPrice(formatNumbers(e.target.value));
   const onDownpaymentChanged = (e) =>
     setDownpayment(formatNumbers(e.target.value));
+
   const onStatusChanged = (e) => setStatus(e.target.value);
+
   const onCategoriesChange = (event) => {
     const category = event.target.value;
     if (event.target.checked) {
@@ -418,18 +421,24 @@ const EditProductForm = ({ product, categories, username }) => {
           value={price}
           onChange={onPriceChanged}
         />
-        {categories?.map((category, index) => (
-          <div key={index}>
-            <input
-              type="checkbox"
-              id={category.id}
-              checked={selectedCategories?.includes(category.id)}
-              value={category.id}
-              onChange={onCategoriesChange}
-            />
-            <label htmlFor={category}>{category.name}</label>
-          </div>
-        ))}
+        <fieldset>
+          <legend>Categorias</legend>
+          {categories?.map((category, index) => (
+            <div key={index}>
+              <label className="custom-checkbox" htmlFor={category.id}>
+                {category.name}
+                <input
+                  type="checkbox"
+                  id={category.id}
+                  checked={selectedCategories?.includes(category._id)}
+                  value={category.id}
+                  onChange={(e) => onCategoriesChange(e)}
+                />
+                <span className="checkmark"></span>
+              </label>
+            </div>
+          ))}
+        </fieldset>
         <div className="form__divider">
           <p className="form__created">
             Created:
