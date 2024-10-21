@@ -6,7 +6,6 @@ export const imagesApiSlice = apiSlice.injectEndpoints({
       query: (formData) => ({
         url: "/upload",
         method: "POST",
-        key: "images",
         body: formData,
       }),
       invalidatesTags: [{ type: "Image", id: "LIST" }],
@@ -15,8 +14,7 @@ export const imagesApiSlice = apiSlice.injectEndpoints({
       query: (imageUrls) => ({
         url: "/upload",
         method: "DELETE",
-
-        body: { imageUrls },
+        body: imageUrls,
       }),
       invalidatesTags: [{ type: "Image", id: "LIST" }],
     }),

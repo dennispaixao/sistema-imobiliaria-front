@@ -3,9 +3,11 @@ import { useGetUsersQuery } from "../users/usersApiSlice";
 import { useGetCategoriesQuery } from "../categories/categoriesApiSlice";
 import PulseLoader from "react-spinners/PulseLoader";
 import useTitle from "../../hooks/useTitle";
+import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {
   useTitle("imobiliaria: criar anuncio");
+  const navigate = useNavigate();
 
   const { users } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
@@ -17,11 +19,21 @@ const NewProduct = () => {
       categories: data?.ids.map((id) => data?.entities[id]),
     }),
   });
+  const clickBackButton = () => {
+    navigate("/dash/products");
+  };
 
   if (!users?.length || !categories?.length)
     return <PulseLoader color={"#FFF"} />;
 
-  const content = <NewProductForm users={users} categories={categories} />;
+  const content = (
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <button className="button" onClick={clickBackButton}>
+        voltar para produtos
+      </button>
+      <NewProductForm users={users} categories={categories} />
+    </div>
+  );
 
   return content;
 };

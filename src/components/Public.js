@@ -1,28 +1,27 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const Public = () => {
-    const content = (
-        <section className="public">
-            <header>
-                <h1>Welcome to <span className="nowrap">Dan D. Repairs!</span></h1>
-            </header>
-            <main className="public__main">
-                <p>Located in Beautiful Downtown Foo City, Dan D. Repairs  provides a trained staff ready to meet your tech repair needs.</p>
-                <address className="public__addr">
-                    Dan D. Repairs<br />
-                    555 Foo Drive<br />
-                    Foo City, CA 12345<br />
-                    <a href="tel:+15555555555">(555) 555-5555</a>
-                </address>
-                <br />
-                <p>Owner: Dan Davidson</p>
-            </main>
-            <footer>
-                <Link to="/login">Employee Login</Link>
-            </footer>
-        </section>
-
-    )
-    return content
-}
-export default Public
+  const content = (
+    <section
+      className="public"
+      style={{ color: "#fff", "text-shadow": "5px 5px 5px #333" }}
+    >
+      <header>
+        <h1>
+          Bem vindo a <span className="nowrap">MMendes Imobiliaria</span>
+        </h1>
+      </header>
+      <main className="public__main">
+        <br />
+        <p>Responsável: Marcia Mendes Paixão</p>
+      </main>
+      <footer>
+        <Link to="/login" style={{ fontSize: "1.5rem", color: "pink" }}>
+          Login administrativo
+        </Link>
+      </footer>
+    </section>
+  );
+  return content;
+};
+export default Public;

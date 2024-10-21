@@ -33,7 +33,14 @@ const ProductsList = () => {
   if (isLoading) content = <PulseLoader color={"#FFF"} />;
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>;
+    content = (
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <p>
+          <Link to="/dash/products/new">Adicionar novo produto</Link>
+        </p>{" "}
+        <p className="errmsg">{error?.data?.message}</p>
+      </div>
+    );
   }
 
   if (isSuccess) {
@@ -56,28 +63,31 @@ const ProductsList = () => {
 
     content = (
       <>
-        <p>
-          <Link to="/dash/products/new">Adicionar novo produto</Link>
-        </p>
-        <table className="table table--products">
-          <thead className="table__thead">
-            <tr>
-              <th scope="col" className="table__th product__title">
-                Título
-              </th>
-              <th scope="col" className="table__th product__created">
-                Criado
-              </th>
-              <th scope="col" className="table__th product__updated">
-                Atualizado
-              </th>
-              <th scope="col" className="table__th product__edit">
-                Editar
-              </th>
-            </tr>
-          </thead>
-          <tbody>{tableContent}</tbody>
-        </table>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>
+            <Link to="/dash/products/new">Adicionar novo produto</Link>
+          </p>
+
+          <table className="table table--products">
+            <thead className="table__thead">
+              <tr>
+                <th scope="col" className="table__th product__title">
+                  Título
+                </th>
+                <th scope="col" className="table__th product__created">
+                  Criado
+                </th>
+                <th scope="col" className="table__th product__updated">
+                  Atualizado
+                </th>
+                <th scope="col" className="table__th product__edit">
+                  Editar
+                </th>
+              </tr>
+            </thead>
+            <tbody>{tableContent}</tbody>
+          </table>
+        </div>
       </>
     );
   }

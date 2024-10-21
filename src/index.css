@@ -4,15 +4,20 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  max-width: 100%;
 }
-html, header, footer, input, text-area{
-  max-width:100%;
+
+html, body {
+  max-width: 100%;
+  width: 100vw;
+  overflow-x: hidden; /* Evitar vazamento para os lados */
 }
+
 /* || VARIABLES */
 
 :root {
   /* COLORS */
-  --BGCOLOR: #0F172A;
+  --BGCOLOR: #ffaaaa;
   --BORDER-COLOR: #FFF;
   --COLOR: #FFF;
   --ERROR: firebrick;
@@ -33,7 +38,7 @@ html, header, footer, input, text-area{
   background-color: var(--TABLE-BGCOLOR);
   color: var(--ERROR);
   padding: 0.25em;
-  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .errmsg a:any-link {
@@ -60,9 +65,7 @@ html, header, footer, input, text-area{
 .icon-button:focus-visible {
   transform: scale(1.2);
 }
-form{
-  max-width:100%;
-}
+
 .icon-button[disabled] {
   visibility: hidden;
 }
@@ -82,7 +85,6 @@ body {
 }
 
 input,
-button,
 textarea,
 select {
   font: inherit;
@@ -131,16 +133,18 @@ a:focus-visible {
 }
 
 .public__addr {
-  margin-top: 1em;
+  padding-top: 1em;
 }
 
 .welcome a::before {
-  content: "➜ "
+  content: "➜ ";
 }
 
 /* || DASH HEADER, CONTAINER & FOOTER */
 
 .dash-header {
+  display: flex;
+  flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -150,6 +154,7 @@ a:focus-visible {
 }
 
 .dash-header__container {
+  width:100%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -158,17 +163,21 @@ a:focus-visible {
 
 .dash-header__container--small {
   max-width: 800px;
-  background:#F00;
+  background: #F00;
 }
 
 .dash-header__nav {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: space-around;
   gap: 0.5em;
 }
 
 .dash-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   padding: 0.75em 0.5em 0.5em;
   flex-grow: 1;
 }
@@ -204,19 +213,23 @@ tr {
 .table {
   font-size: 1rem;
   width: 100%;
+  max-width: 100%;
   height: auto;
-  overflow:scroll;
+  overflow-x: auto; /* Permitir rolagem horizontal em tabelas */
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr ;
+  grid-template-columns: 1fr 1fr 1fr;
   color: var(--TABLE-COLOR);
   gap: 0.1em;
 }
-.table--products{
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-.table--categories{
+
+.table--products {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+
+.table--categories {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
 .table__button {
   padding: 0.25em;
   font-size: 1.5rem;
@@ -246,33 +259,13 @@ tr {
   background-color: var(--INACTIVE);
 }
 
-/* ||  NOTE */
-
-.note__created,
-.note__updated{
-  display: none;
-}
-
-.note__status {
-  font-weight: bold;
-}
-
-.note__status--open {
-  color: var(--STATUS-OPEN);
-}
-
-.note__status--completed {
-  color: var(--STATUS-COMPLETE);
-}
-
-
 /* || FORM - GENERAL */
 
 .form {
   display: flex;
   flex-flow: column nowrap;
   gap: 0.75em;
-  max-width: 800px;
+  max-width: 100%;
 }
 
 .form__checkbox-container {
@@ -287,6 +280,7 @@ tr {
   display: flex;
   align-items: center;
   width: 100%;
+  max-width: 100%;
   gap: 0.5em;
 }
 
@@ -301,14 +295,14 @@ tr {
   padding: 0.5em;
   border-radius: 15px;
 }
+
 .form__input--status {
-  height:auto;
+  height: auto;
 }
 
 .form__input--text {
   min-height: 150px;
 }
-
 
 .form__input--incomplete {
   border: 1px solid var(--INPUT-INVALID);
@@ -345,81 +339,99 @@ tr {
   flex-flow: column nowrap;
   gap: 0.5em;
 }
-input{
-  max-width:100%;
+
+input {
+  max-width: 100%;
+}
+.button {
+  display: block;
+  max-width:120px;
+  margin:7px;
+  padding: 0px; /* Ajuste o padding conforme necessário */
+  font-size: 1rem;
+  background-color: var(--BGCOLOR);
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  flex-grow: 0;   /* Não permite que o filho cresça */
+  align-self: auto;
 }
 
-fieldset{
-  max-width:100%;
-  border:2px solid var(--COLOR);
-  display:flex;
-  flex-direction: column;
-  gap:1rem;
-  flex-wrap: wrap;
-  font-size:2rem;
+.button:hover {
+  background-color: #45a049;
 }
-label.custom-checkbox{
-  display:flex;
+
+fieldset {
+  max-width: 100%;
+  border: 2px solid var(--COLOR);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 2rem;
+}
+
+label.custom-checkbox {
+  display: flex;
   vertical-align: center;
   align-items: center;
-  gap:0.3rem;}
-  
-.custom-checkbox input {
-    display: none;
-  }
+  gap: 0.3rem;
+}
 
-  .custom-checkbox input {
-    display: none;
-  }
-  
-  /* Estiliza o span que será o ícone do checkbox */
-  .custom-checkbox .checkmark {
-    width: 20px;
-    height: 20px;
-    background-color: #eee;
-    display: inline-block;
-    border-radius: 4px;
-    position: relative;
-  }
-  
-  /* Estilo quando o checkbox está marcado */
-  .custom-checkbox input:checked + .checkmark {
-    background-color: #2196F3;
-    vertical-align: center;
-    align-items: center;
-  }
-  
-  /* Adiciona o ícone de check */
-  .custom-checkbox .checkmark::after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-  
-  .custom-checkbox input:checked + .checkmark::after {
-    display: block;
-    left: 6px;
-    top: 2px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    transform: rotate(45deg);
-  }
+.custom-checkbox input {
+  display: none;
+}
+
+.custom-checkbox .checkmark {
+  width: 20px;
+  height: 20px;
+  background-color: #eee;
+  display: inline-block;
+  border-radius: 4px;
+  position: relative;
+}
+
+.custom-checkbox input:checked + .checkmark {
+  background-color: #2196F3;
+}
+
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+  display: block;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+
+/* Media Queries for Responsiveness */
 
 @media screen and (max-width: 400px) {
   h1 {
     font-size: 2rem;
   }
-.dash-header{
-  max-width:100%;}
+
+  .dash-header {
+    max-width: 100%;
+  }
+
   .dash-header__nav {
     gap: 0;
   }
-  .dash-header__title{
-    font-size:1rem;
 
-
+  .dash-header__title {
+    font-size: 1rem;
   }
 
   .icon-button {
@@ -427,9 +439,7 @@ label.custom-checkbox{
   }
 }
 
-
 @media screen and (min-width: 768px) {
-
   body {
     font-size: 1.25rem;
   }
@@ -451,8 +461,8 @@ label.custom-checkbox{
   }
 
   .note__created,
-  .note__updated{
-    display: block
+  .note__updated {
+    display: block;
   }
 
   .form__action-buttons {
