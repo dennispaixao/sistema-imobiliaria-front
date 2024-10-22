@@ -111,6 +111,7 @@ const ProductsList = () => {
             Adicionar novo produto
           </Link>
           <input
+            className={`form__input`}
             type="text"
             name="search"
             onChange={handleSearchChange}
@@ -118,6 +119,7 @@ const ProductsList = () => {
           />
           <label htmlFor="searchCategories">Categoria</label>
           <select
+            className={`form__input`}
             name="categories"
             id="categories"
             onChange={handleCategorieChange}

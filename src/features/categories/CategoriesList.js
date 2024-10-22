@@ -5,6 +5,7 @@ import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useGetUsersQuery } from "../users/usersApiSlice";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 const CategoriesList = () => {
   useTitle("imobiliaria: Categories List");
   const { data: userToFilter } = useGetUsersQuery("usersList", {
@@ -12,7 +13,7 @@ const CategoriesList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
+  const [selectedCategorie, setSelectedCategorie] = useState("");
   const { username, isManager, isAdmin } = useAuth();
 
   const {
@@ -26,7 +27,8 @@ const CategoriesList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
+  console.log("categories", categories);
+  console.log("setSelectedCategorie", selectedCategorie);
   let content;
 
   if (isLoading) content = <PulseLoader color={"#FFF"} />;
@@ -49,16 +51,38 @@ const CategoriesList = () => {
 
     const tableContent =
       ids?.length &&
-      filteredIds?.map((categorieId) => (
-        <Categorie key={categorieId} categorieId={categorieId} />
-      ));
-
+      filteredIds
+        ?.filter((id) =>
+          entities[id].name
+            .toLowerCase()
+            .includes(selectedCategorie.toLowerCase())
+        )
+        .map((categorieId) => (
+          <Categorie key={categorieId} categorieId={categorieId} />
+        ));
+    const handleCategorieChange = (event) => {
+      setSelectedCategorie(event.target.value);
+    };
     content = (
-      <>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <p>
-          <Link to="/dash/categories/new">Adicionar nova categoria</Link>
+          <Link className="button" to="/dash/categories/new">
+            Adicionar nova categoria
+          </Link>
         </p>
 
+        <label htmlFor="searchCategories" className={"offScreen"}>
+          Procurar por categoria
+        </label>
+        <input
+          type="text"
+          name="search"
+          id="searchCategories"
+          placeholder="Buscar Categorias"
+          className={`form__input`}
+          value={selectedCategorie}
+          onChange={(e) => handleCategorieChange(e)}
+        />
         <table className="table table--categories">
           <thead className="table__thead">
             <tr>
@@ -78,7 +102,7 @@ const CategoriesList = () => {
           </thead>
           <tbody>{tableContent}</tbody>
         </table>
-      </>
+      </div>
     );
   }
 

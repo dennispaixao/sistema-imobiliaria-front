@@ -12,6 +12,10 @@ html, body {
   width: 100vw;
   overflow-x: hidden; /* Evitar vazamento para os lados */
 }
+.offScreen{
+  position:absolute;
+  margin-left: -100000px;
+}
 
 /* || VARIABLES */
 
