@@ -12,21 +12,18 @@ import { useState } from "react";
 const ProductsList = () => {
   useTitle("imobiliaria: Products List");
   const [selectedCategorie, setSelectedCategorie] = useState("");
-
+  const [searchBoxInput, setSearchBoxInput] = useState("");
   const { data: userToFilter } = useGetUsersQuery("usersList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
   const { data: categories } = useGetCategoriesQuery("categoriesList", {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-
   const { username, isManager, isAdmin } = useAuth();
-
   const {
     data: products,
     isLoading,
@@ -50,7 +47,7 @@ const ProductsList = () => {
           <Link to="/dash/products/new" className="button">
             Adicionar novo produto
           </Link>
-        </p>{" "}
+        </p>
         <p className="errmsg">{error?.data?.message}</p>
       </div>
     );
@@ -60,16 +57,27 @@ const ProductsList = () => {
     const { ids = [], entities = {} } = products;
 
     let filteredIds = [];
+
     if (isManager || isAdmin) {
       filteredIds = ids.filter((id) => {
         const productCategories = entities[id]?.categories || [];
-        // Comparando pelo _id da categoria
-        return (
+
+        const matchesSearchBoxInput = (prod) => {
+          return (
+            prod.ticket.toString().startsWith(searchBoxInput) ||
+            prod.title.toLowerCase().startsWith(searchBoxInput.toLowerCase())
+          );
+        };
+
+        const productMatches = matchesSearchBoxInput(entities[id]);
+
+        const categoryMatches =
           !selectedCategorie ||
           productCategories.some(
-            (cat) => cat._id === selectedCategorie // Comparando com o _id da categoria selecionada
-          )
-        );
+            (cat) => cat.name === selectedCategorie // Comparando com o _id da categoria selecionada
+          );
+
+        return categoryMatches && productMatches;
       });
     } else {
       const { ids: idsUsers, entities: entitiesUsers } = userToFilter;
@@ -80,7 +88,7 @@ const ProductsList = () => {
     }
 
     const tableContent =
-      ids?.length > 0 && filteredIds?.length > 0 ? (
+      filteredIds.length > 0 ? (
         filteredIds.map((productId) => (
           <Product key={productId} productId={productId} />
         ))
@@ -88,8 +96,12 @@ const ProductsList = () => {
         <p>Sem produtos correspondentes à categoria selecionada.</p>
       );
 
+    const handleSearchChange = (event) => {
+      setSearchBoxInput(event.target.value);
+    };
+
     const handleCategorieChange = (event) => {
-      setSelectedCategorie(event.target.value); // Agora o valor é o _id da categoria
+      setSelectedCategorie(event.target.value);
     };
 
     content = (
@@ -98,16 +110,22 @@ const ProductsList = () => {
           <Link to="/dash/products/new" className="button">
             Adicionar novo produto
           </Link>
+          <input
+            type="text"
+            name="search"
+            onChange={handleSearchChange}
+            placeholder="Buscar por ticket ou título"
+          />
           <label htmlFor="searchCategories">Categoria</label>
           <select
             name="categories"
             id="categories"
             onChange={handleCategorieChange}
-            value={selectedCategorie || ""} // Faz o valor seguir o estado corretamente
+            value={selectedCategorie || ""}
           >
-            <option value={""}>todas</option>
+            <option value="">todas</option>
             {categories?.ids?.map((id) => (
-              <option key={id} value={id}>
+              <option key={id} value={categories.entities[id].name}>
                 {categories.entities[id].name}
               </option>
             ))}
