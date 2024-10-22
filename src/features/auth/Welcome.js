@@ -8,7 +8,7 @@ const Welcome = () => {
   useTitle(`techProducts: ${username}`);
 
   const date = new Date();
-  const today = new Intl.DateTimeFormat("en-US", {
+  const today = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "full",
     timeStyle: "long",
   }).format(date);
@@ -17,10 +17,10 @@ const Welcome = () => {
     <section className="welcome">
       <p>{today}</p>
 
-      <h1>Welcome {username}!</h1>
+      <h1>Boas vindas {username}!</h1>
 
       <p>
-        <Link to="/dash/products">Produtos</Link>
+        <Link to="/dash/products">Imóveis</Link>
       </p>
 
       {isAdmin && (

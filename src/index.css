@@ -343,14 +343,14 @@ tr {
 input {
   max-width: 100%;
 }
-.button {
+.button, .button p {
   display: block;
   max-width:120px;
   margin:7px;
   padding: 0px; /* Ajuste o padding conforme necessário */
   font-size: 1rem;
   background-color: var(--BGCOLOR);
-  color: #333;
+  color: #333 !important;
   border: none;
   border-radius: 5px;
   cursor: pointer;
