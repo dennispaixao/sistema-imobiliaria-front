@@ -5,6 +5,8 @@ import PulseLoader from "react-spinners/PulseLoader";
 import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 const UsersList = () => {
   const [searchBoxInput, setSearchBoxInput] = useState("");
   const { isAdmin } = useAuth();
@@ -27,13 +29,25 @@ const UsersList = () => {
   if (isLoading) content = <PulseLoader color={"#FFF"} />;
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>;
+    content = isAdmin && (
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link className="button icon-button" to="/dash/">
+            <FontAwesomeIcon icon={faBackward} />
+          </Link>
+          <Link className="button" to="/dash/users/new">
+            Adicionar novo usuário
+          </Link>
+        </div>
+        <p className="errmsg">{error?.data?.message}</p>
+      </div>
+    );
   }
 
   if (isSuccess) {
     const { ids, entities } = users;
 
-    const tableContent =
+    const tableContent = isAdmin &&
       ids?.length &&
       ids
         .filter((id) =>
@@ -46,13 +60,16 @@ const UsersList = () => {
     const handleUserChange = (event) => {
       setSearchBoxInput(event.target.value);
     };
-    content = (
+    content = isAdmin && (
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {isAdmin && (
-          <p>
-            <Link to="/dash/users/new">Adicionar usuário</Link>
-          </p>
-        )}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link className="button icon-button" to="/dash/">
+            <FontAwesomeIcon icon={faBackward} />
+          </Link>
+          <Link className="button" to="/dash/users/new">
+            Adicionar novo usuário
+          </Link>
+        </div>
         <label htmlFor="searchUsers" className={"offScreen"}>
           Procurar por usuarios
         </label>

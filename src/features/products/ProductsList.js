@@ -3,12 +3,12 @@ import Product from "./Product";
 import useAuth from "../../hooks/useAuth";
 import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
-import { useSelector } from "react-redux";
 import { useGetUsersQuery } from "../users/usersApiSlice";
 import { useGetCategoriesQuery } from "../categories/categoriesApiSlice";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 const ProductsList = () => {
   useTitle("imobiliaria: Products List");
   const [selectedCategorie, setSelectedCategorie] = useState("");
@@ -43,11 +43,14 @@ const ProductsList = () => {
   if (isError) {
     content = (
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <p>
-          <Link to="/dash/products/new" className="button">
-            Adicionar novo produto
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link className="button icon-button" to="/dash/">
+            <FontAwesomeIcon icon={faBackward} />
           </Link>
-        </p>
+          <Link className="button" to="/dash/products/new">
+            Adicionar novo imóvel
+          </Link>
+        </div>
         <p className="errmsg">{error?.data?.message}</p>
       </div>
     );
@@ -107,9 +110,14 @@ const ProductsList = () => {
     content = (
       <>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <Link to="/dash/products/new" className="button">
-            Adicionar novo produto
-          </Link>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Link className="button icon-button" to="/dash/">
+              <FontAwesomeIcon icon={faBackward} />
+            </Link>
+            <Link className="button" to="/dash/products/new">
+              Adicionar novo imovel
+            </Link>
+          </div>
           <input
             className={`form__input`}
             type="text"

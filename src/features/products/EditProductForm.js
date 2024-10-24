@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   useUpdateProductMutation,
   useDeleteProductMutation,
@@ -15,7 +15,6 @@ import { formatNumbers } from "../../utils/format";
 
 const EditProductForm = ({ product, categories, username }) => {
   const { isAdmin } = useAuth();
-  const hasMountedImage = useRef(false);
 
   const [updateProduct, { isLoading, isSuccess, isError, error }] =
     useUpdateProductMutation();

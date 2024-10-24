@@ -5,6 +5,8 @@ import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useGetUsersQuery } from "../users/usersApiSlice";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 const CategoriesList = () => {
   useTitle("imobiliaria: Categories List");
@@ -34,7 +36,19 @@ const CategoriesList = () => {
   if (isLoading) content = <PulseLoader color={"#FFF"} />;
 
   if (isError) {
-    content = <p className="errmsg">{error?.data?.message}</p>;
+    content = (
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link className="button icon-button" to="/dash/">
+            <FontAwesomeIcon icon={faBackward} />
+          </Link>
+          <Link className="button" to="/dash/categories/new">
+            Adicionar nova categoria
+          </Link>
+        </div>
+        <p className="errmsg">{error?.data?.message}</p>
+      </div>
+    );
   }
 
   if (isSuccess) {
@@ -65,11 +79,14 @@ const CategoriesList = () => {
     };
     content = (
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <p>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Link className="button icon-button" to="/dash/">
+            <FontAwesomeIcon icon={faBackward} />
+          </Link>
           <Link className="button" to="/dash/categories/new">
             Adicionar nova categoria
           </Link>
-        </p>
+        </div>
 
         <label htmlFor="searchCategories" className={"offScreen"}>
           Procurar por categoria
