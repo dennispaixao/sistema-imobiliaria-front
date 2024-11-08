@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddNewCategorieMutation } from "./categoriesApiSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../hooks/useAuth";
 import { useGetUsersQuery } from "../users/usersApiSlice";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 const NewCategorieForm = ({ users }) => {
   const { username, isAdmin } = useAuth();
@@ -56,9 +58,17 @@ const NewCategorieForm = ({ users }) => {
   const validNameClass = !name ? "form__input--incomplete" : "";
 
   const content = !isAdmin ? (
-    <h3 className={errClass}>{error?.data?.message}</h3>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Link className="button icon-button" to="/dash/categories">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
+      <h3 className={errClass}>{error?.data?.message}</h3>
+    </div>
   ) : (
-    <>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Link className="button icon-button" to="/dash/categories">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
       <p className={errClass}>{error?.data?.message}</p>
 
       <form className="form" onSubmit={onSaveCategorieClicked}>
@@ -86,7 +96,7 @@ const NewCategorieForm = ({ users }) => {
         <p>{username} </p>
         <input type="hidden" name="user" value={userId} />
       </form>
-    </>
+    </div>
   );
 
   return content;

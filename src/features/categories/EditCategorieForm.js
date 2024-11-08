@@ -6,7 +6,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../hooks/useAuth";
+import { useGetUsersQuery } from "../users/usersApiSlice";
 
 const EditCategorieForm = ({ categorie, users }) => {
   const { isAdmin } = useAuth();
@@ -23,6 +26,17 @@ const EditCategorieForm = ({ categorie, users }) => {
 
   const [name, setName] = useState(categorie.name);
   const [userId, setUserId] = useState(categorie.user);
+  const [username, setUsername] = useState("");
+
+  const { data: userToFilter } = useGetUsersQuery("usersList", {
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  });
+  useEffect(() => {
+    const { ids: idsUsers, entities: entitiesUsers } = userToFilter;
+    setUsername(entitiesUsers[userId].username);
+  }, [userId, userToFilter]);
 
   useEffect(() => {
     if (isSuccess || isDelSuccess) {
@@ -52,7 +66,7 @@ const EditCategorieForm = ({ categorie, users }) => {
     }
   };
 
-  const created = new Date(categorie.createdAt).toLocaleString("en-US", {
+  const created = new Date(categorie.createdAt).toLocaleString("pt-BR", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -60,7 +74,7 @@ const EditCategorieForm = ({ categorie, users }) => {
     minute: "numeric",
     second: "numeric",
   });
-  const updated = new Date(categorie.updatedAt).toLocaleString("en-US", {
+  const updated = new Date(categorie.updatedAt).toLocaleString("pt-BR", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -87,13 +101,24 @@ const EditCategorieForm = ({ categorie, users }) => {
   }
 
   const content = (
-    <>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Link className="button icon-button" to="/dash/categories">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
       <p className={errClass}>{errContent}</p>
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <div className="form__title-row">
-          <h2>Edit Categorie #{categorie.ticket}</h2>
-          <div className="form__action-buttons">
+        <div
+          className="form__title-row"
+          style={{ display: "flex", flexWrap: "wrap" }}
+        >
+          <div>
+            <h2>Edit Categorie #{categorie.ticket}</h2>
+          </div>
+          <div
+            style={{ display: "flex", flexWrap: "wrap" }}
+            className="form__action-buttons"
+          >
             <button
               className="icon-button"
               title="Save"
@@ -117,7 +142,7 @@ const EditCategorieForm = ({ categorie, users }) => {
           value={name}
           onChange={onNameChanged}
         />
-        ASSIGNED TO:
+        ASSIGNED TO: {username}
         <div className="form__divider">
           <p className="form__created">
             Created:
@@ -131,7 +156,7 @@ const EditCategorieForm = ({ categorie, users }) => {
           </p>
         </div>
       </form>
-    </>
+    </div>
   );
 
   return content;

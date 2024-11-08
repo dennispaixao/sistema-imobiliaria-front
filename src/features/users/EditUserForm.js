@@ -3,6 +3,8 @@ import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { ROLES } from "../../config/roles";
 
 const USER_REGEX = /^[A-z]{3,20}$/;
@@ -99,7 +101,10 @@ const EditUserForm = ({ user }) => {
   const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
   const content = (
-    <>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Link className="button icon-button" to="/dash/users">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
       <p className={errClass}>{errContent}</p>
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
@@ -179,7 +184,7 @@ const EditUserForm = ({ user }) => {
           {options}
         </select>
       </form>
-    </>
+    </div>
   );
 
   return content;

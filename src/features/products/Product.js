@@ -23,7 +23,7 @@ const Product = ({ productId }) => {
     const categoriesNames = product.categories.reduce((ac, cat) => {
       return ac + cat.name + ", ";
     }, "");
-    console.log("categories", categoriesNames);
+
     return (
       <tr className="table__row">
         <td className="table__cell product__cod">{product.ticket}</td>

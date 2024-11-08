@@ -5,10 +5,11 @@ import { useGetCategoriesQuery } from "../categories/categoriesApiSlice";
 import useAuth from "../../hooks/useAuth";
 import PulseLoader from "react-spinners/PulseLoader";
 import useTitle from "../../hooks/useTitle";
-import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const EditProduct = () => {
-  const navigate = useNavigate();
   useTitle("techProducts: Edit Product");
 
   const { id } = useParams();
@@ -34,15 +35,12 @@ const EditProduct = () => {
       return <p className="errmsg">No access</p>;
     }
   }
-  const clickBackButton = () => {
-    navigate("/dash/products");
-  };
 
   const content = (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <button className="button" onClick={clickBackButton}>
-        voltar para produtos
-      </button>
+      <Link className="button icon-button" to="/dash/products">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
 
       <EditProductForm
         product={product}

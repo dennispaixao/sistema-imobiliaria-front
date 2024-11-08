@@ -90,8 +90,9 @@ body {
 
 input,
 textarea,
-select {
+select, button, .img__previews--container {
   font: inherit;
+  max-width: 660px !important;
 }
 
 #root {
@@ -289,9 +290,12 @@ tr {
 }
 
 .form__title-row {
+  max-width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  color:pink;
 }
 
 .form__input,
@@ -328,7 +332,6 @@ tr {
   justify-content: flex-end;
   align-items: center;
   gap: 0.5em;
-  position: absolute;
   right: 0.5em;
 }
 
@@ -343,7 +346,23 @@ tr {
   flex-flow: column nowrap;
   gap: 0.5em;
 }
-
+.img__previews--container{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: no-wrap;
+  overflow-x: scroll;
+  margin-top: 10px;
+}
+.image-previews{
+  width: 200px;
+  height: auto;
+  flex: 0 0 auto;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.img-preview
+{ width: auto; height: 100% }
 input {
   max-width: 100%;
 }

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useAddNewUserMutation } from "./usersApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { ROLES } from "../../config/roles";
 import useTitle from "../../hooks/useTitle";
@@ -57,7 +59,6 @@ const NewUserForm = () => {
   const onSaveUserClicked = async (e) => {
     e.preventDefault();
     if (canSave) {
-      console.log(username, password, roles);
       await addNewUser({ username, password, roles });
     }
   };
@@ -79,7 +80,10 @@ const NewUserForm = () => {
     : "";
 
   const content = (
-    <>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Link className="button icon-button" to="/dash/users">
+        <FontAwesomeIcon icon={faBackward} />
+      </Link>
       <p className={errClass}>{error?.data?.message}</p>
 
       <form className="form" onSubmit={onSaveUserClicked}>
@@ -136,7 +140,7 @@ const NewUserForm = () => {
           {options}
         </select>
       </form>
-    </>
+    </div>
   );
 
   return content;

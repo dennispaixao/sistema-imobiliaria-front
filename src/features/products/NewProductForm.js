@@ -183,42 +183,35 @@ const NewProductForm = ({ users, categories }) => {
   ) : (
     <>
       <p className={errClass}>{error?.data?.message}</p>
-
-      {selectedImagePreviews.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
-          {selectedImagePreviews.map((image, index) => (
-            <div
-              key={index}
-              style={{
-                marginRight: "10px",
-                marginBottom: "10px",
-                position: "relative",
-              }}
-            >
-              <img
-                src={image}
-                alt={`Pré-visualização ${index + 1}`}
-                style={{ width: "150px", height: "auto" }}
-              />
-              <button
-                type="button"
-                onClick={() => handleDeleteImage(index)}
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
+      <div>
+        {selectedImagePreviews.length > 0 && (
+          <div className="img__previews--container">
+            {selectedImagePreviews.map((image, index) => (
+              <div key={index} className="image-previews">
+                <img
+                  src={image}
+                  alt={`Pré-visualização ${index + 1}`}
+                  className="img-preview"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(index)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <form className="form" onSubmit={onSaveProductClicked}>
         <input
           type="file"

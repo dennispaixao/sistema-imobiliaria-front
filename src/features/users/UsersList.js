@@ -3,15 +3,18 @@ import User from "./User";
 import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 const UsersList = () => {
   const [searchBoxInput, setSearchBoxInput] = useState("");
   const { isAdmin } = useAuth();
   useTitle("Lista de usuários");
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAdmin) navigate("/login");
+  }, [isAdmin, navigate]);
   const {
     data: users,
     isLoading,
@@ -47,7 +50,8 @@ const UsersList = () => {
   if (isSuccess) {
     const { ids, entities } = users;
 
-    const tableContent = isAdmin &&
+    const tableContent =
+      isAdmin &&
       ids?.length &&
       ids
         .filter((id) =>

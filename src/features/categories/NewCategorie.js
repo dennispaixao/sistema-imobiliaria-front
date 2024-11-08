@@ -3,9 +3,10 @@ import { useGetUsersQuery } from "../users/usersApiSlice";
 import PulseLoader from "react-spinners/PulseLoader";
 import useTitle from "../../hooks/useTitle";
 import useAuth from "../../hooks/useAuth";
+
 const NewCategorie = () => {
   useTitle("imobiliaria: criar anuncio");
-  const [username] = useAuth();
+  const [username, isAdmin] = useAuth();
 
   const { users } = useGetUsersQuery("usersList", {
     selectFromResult: ({ data }) => ({
@@ -13,15 +14,14 @@ const NewCategorie = () => {
     }),
   });
 
-  if (!users?.length) return <PulseLoader color={"#FFF"} />;
+  if (!users?.length)
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <PulseLoader color={"#FFF"} />
+      </div>
+    );
 
-  const content = (
-    <NewCategorieForm
-      users={users.filter((user) => {
-        return user.username === username;
-      })}
-    />
-  );
+  const content = <NewCategorieForm users={users} />;
 
   return content;
 };

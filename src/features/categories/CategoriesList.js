@@ -29,8 +29,6 @@ const CategoriesList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   });
-  console.log("categories", categories);
-  console.log("setSelectedCategorie", selectedCategorie);
   let content;
 
   if (isLoading) content = <PulseLoader color={"#FFF"} />;

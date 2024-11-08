@@ -7,6 +7,7 @@ import {
   useAddNewImageMutation,
   useDeleteImageMutation,
 } from "../images/imagesApiSlice";
+
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -219,12 +220,18 @@ const EditProductForm = ({ product, categories, username }) => {
   };
 
   const onDeleteProductClicked = async () => {
-    try {
-      const imageUrls = { imageUrls: product.images };
-      await deleteImages(imageUrls);
-      await deleteProduct({ id: product.id });
-    } catch (e) {
-      console.error(e);
+    let confirmed = false;
+    confirmed = window.confirm(
+      `deseja mesmo excluir o produto ${product.title}`
+    );
+    if (confirmed) {
+      try {
+        const imageUrls = { imageUrls: product.images };
+        await deleteImages(imageUrls);
+        await deleteProduct({ id: product.id });
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
   useEffect(() => {}, [
@@ -272,75 +279,63 @@ const EditProductForm = ({ product, categories, username }) => {
   const content = isAdmin ? (
     <>
       <p className={errClass}>{errContent}</p>
-      {selectedImagePreviews.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
-          {selectedImagePreviews.map((image, index) => (
-            <div
-              key={index}
-              style={{
-                marginRight: "10px",
-                marginBottom: "10px",
-                position: "relative",
-              }}
-            >
-              <img
-                src={image}
-                alt={`Pré-visualização ${index + 1}`}
-                style={{ width: "150px", height: "auto" }}
-              />
-              <button
-                type="button"
-                onClick={() => handleDeleteImage(index)}
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="img__previews--container">
+        {selectedImagePreviews.length > 0 && (
+          <>
+            {selectedImagePreviews.map((image, index) => (
+              <div key={`selected-${index}`} className="image-previews">
+                <img
+                  src={image}
+                  alt={`Pré-visualização ${index + 1}`}
+                  className="img-preview"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(index)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
+                </button>
+              </div>
+            ))}
+          </>
+        )}
 
-      {initialImages.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
-          {initialImages.map((image, index) => (
-            <div
-              key={index}
-              style={{
-                marginRight: "10px",
-                marginBottom: "10px",
-                position: "relative",
-              }}
-            >
-              <img
-                src={image}
-                alt={`Pré-visualização ${index + 1}`}
-                style={{ width: "150px", height: "auto" }}
-              />
-              <button
-                type="button"
-                onClick={() => handleDeleteImageInitial(image)}
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+        {initialImages.length > 0 && (
+          <>
+            {initialImages.map((image, index) => (
+              <div key={`initial-${index}`} className="image-previews">
+                <img
+                  src={image}
+                  alt={`Pré-visualização ${index + 1}`}
+                  className="img-preview"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImageInitial(image)}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "5px",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} style={{ color: "red" }} />
+                </button>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <div className="form__title-row">
@@ -455,7 +450,7 @@ const EditProductForm = ({ product, categories, username }) => {
       </form>
     </>
   ) : (
-    <>caiu aqui</>
+    <>{"Sem permissão de acesso administrativo"}</>
   );
 
   return content;
