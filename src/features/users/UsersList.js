@@ -12,9 +12,7 @@ const UsersList = () => {
   const { isAdmin } = useAuth();
   useTitle("Lista de usuários");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!isAdmin) navigate("/login");
-  }, [isAdmin, navigate]);
+
   const {
     data: users,
     isLoading,
